@@ -1,0 +1,14 @@
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\bin\Debug\EnrollmentSytem.exe.config
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\bin\Debug\EnrollmentSytem.exe
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\bin\Debug\EnrollmentSytem.pdb
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.csproj.AssemblyReference.cache
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.StudentEntryForm.resources
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.SubjectEntryForm.resources
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.LogInForm.resources
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.SubjectScheduleEntryForm.resources
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.StudentEnrollmentEntryForm.resources
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.Properties.Resources.resources
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.csproj.GenerateResource.cache
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.csproj.CoreCompileInputs.cache
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.exe
+C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.pdb
