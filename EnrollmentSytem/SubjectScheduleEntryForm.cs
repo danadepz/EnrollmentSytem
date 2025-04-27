@@ -10,14 +10,14 @@ using System.Windows.Forms;
 
 namespace EnrollmentSytem
 {
-    public partial class Form1 : Form
+    public partial class SubjectScheduleEntryForm : Form
     {
-        public Form1()
+        public SubjectScheduleEntryForm()
         {
             InitializeComponent();
         }
 
-        private void StudentEntryLabel_Click(object sender, EventArgs e)
+        private void ClearButton_Click(object sender, EventArgs e)
         {
 
         }
