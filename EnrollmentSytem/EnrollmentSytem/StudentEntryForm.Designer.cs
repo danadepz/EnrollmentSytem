@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.IdNumberLabel = new System.Windows.Forms.Label();
             this.FirstNameLabel = new System.Windows.Forms.Label();
             this.MiddleNameLabel = new System.Windows.Forms.Label();
@@ -47,13 +46,15 @@
             this.SaveButton = new System.Windows.Forms.Button();
             this.ClearButton1 = new System.Windows.Forms.Button();
             this.StudentEntryLabel = new System.Windows.Forms.Label();
+            this.ReturnButton = new System.Windows.Forms.Button();
+            this.NextButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // IdNumberLabel
             // 
             this.IdNumberLabel.AutoSize = true;
             this.IdNumberLabel.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IdNumberLabel.Location = new System.Drawing.Point(62, 70);
+            this.IdNumberLabel.Location = new System.Drawing.Point(74, 103);
             this.IdNumberLabel.Name = "IdNumberLabel";
             this.IdNumberLabel.Size = new System.Drawing.Size(70, 15);
             this.IdNumberLabel.TabIndex = 0;
@@ -63,7 +64,7 @@
             // 
             this.FirstNameLabel.AutoSize = true;
             this.FirstNameLabel.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FirstNameLabel.Location = new System.Drawing.Point(69, 98);
+            this.FirstNameLabel.Location = new System.Drawing.Point(81, 131);
             this.FirstNameLabel.Name = "FirstNameLabel";
             this.FirstNameLabel.Size = new System.Drawing.Size(63, 15);
             this.FirstNameLabel.TabIndex = 1;
@@ -73,7 +74,7 @@
             // 
             this.MiddleNameLabel.AutoSize = true;
             this.MiddleNameLabel.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MiddleNameLabel.Location = new System.Drawing.Point(53, 128);
+            this.MiddleNameLabel.Location = new System.Drawing.Point(65, 161);
             this.MiddleNameLabel.Name = "MiddleNameLabel";
             this.MiddleNameLabel.Size = new System.Drawing.Size(79, 15);
             this.MiddleNameLabel.TabIndex = 2;
@@ -83,7 +84,7 @@
             // 
             this.LastNameLabel.AutoSize = true;
             this.LastNameLabel.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LastNameLabel.Location = new System.Drawing.Point(70, 159);
+            this.LastNameLabel.Location = new System.Drawing.Point(82, 192);
             this.LastNameLabel.Name = "LastNameLabel";
             this.LastNameLabel.Size = new System.Drawing.Size(62, 15);
             this.LastNameLabel.TabIndex = 3;
@@ -93,7 +94,7 @@
             // 
             this.CourseLabel.AutoSize = true;
             this.CourseLabel.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CourseLabel.Location = new System.Drawing.Point(84, 188);
+            this.CourseLabel.Location = new System.Drawing.Point(96, 221);
             this.CourseLabel.Name = "CourseLabel";
             this.CourseLabel.Size = new System.Drawing.Size(48, 15);
             this.CourseLabel.TabIndex = 4;
@@ -103,7 +104,7 @@
             // 
             this.YearLabel.AutoSize = true;
             this.YearLabel.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.YearLabel.Location = new System.Drawing.Point(99, 216);
+            this.YearLabel.Location = new System.Drawing.Point(111, 249);
             this.YearLabel.Name = "YearLabel";
             this.YearLabel.Size = new System.Drawing.Size(33, 15);
             this.YearLabel.TabIndex = 5;
@@ -113,7 +114,7 @@
             // 
             this.RemarksLabel.AutoSize = true;
             this.RemarksLabel.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RemarksLabel.Location = new System.Drawing.Point(74, 244);
+            this.RemarksLabel.Location = new System.Drawing.Point(86, 277);
             this.RemarksLabel.Name = "RemarksLabel";
             this.RemarksLabel.Size = new System.Drawing.Size(58, 15);
             this.RemarksLabel.TabIndex = 6;
@@ -129,7 +130,7 @@
             // 
             // IdNumberTextBox
             // 
-            this.IdNumberTextBox.Location = new System.Drawing.Point(138, 68);
+            this.IdNumberTextBox.Location = new System.Drawing.Point(150, 101);
             this.IdNumberTextBox.Name = "IdNumberTextBox";
             this.IdNumberTextBox.Size = new System.Drawing.Size(100, 20);
             this.IdNumberTextBox.TabIndex = 8;
@@ -137,35 +138,35 @@
             // 
             // FirstNameTextBox
             // 
-            this.FirstNameTextBox.Location = new System.Drawing.Point(138, 96);
+            this.FirstNameTextBox.Location = new System.Drawing.Point(150, 129);
             this.FirstNameTextBox.Name = "FirstNameTextBox";
             this.FirstNameTextBox.Size = new System.Drawing.Size(156, 20);
             this.FirstNameTextBox.TabIndex = 9;
             // 
             // MiddleNameTextBox
             // 
-            this.MiddleNameTextBox.Location = new System.Drawing.Point(138, 126);
+            this.MiddleNameTextBox.Location = new System.Drawing.Point(150, 159);
             this.MiddleNameTextBox.Name = "MiddleNameTextBox";
             this.MiddleNameTextBox.Size = new System.Drawing.Size(156, 20);
             this.MiddleNameTextBox.TabIndex = 10;
             // 
             // LastNameTextBox
             // 
-            this.LastNameTextBox.Location = new System.Drawing.Point(138, 157);
+            this.LastNameTextBox.Location = new System.Drawing.Point(150, 190);
             this.LastNameTextBox.Name = "LastNameTextBox";
             this.LastNameTextBox.Size = new System.Drawing.Size(156, 20);
             this.LastNameTextBox.TabIndex = 11;
             // 
             // YearTextBox
             // 
-            this.YearTextBox.Location = new System.Drawing.Point(138, 214);
+            this.YearTextBox.Location = new System.Drawing.Point(150, 247);
             this.YearTextBox.Name = "YearTextBox";
             this.YearTextBox.Size = new System.Drawing.Size(100, 20);
             this.YearTextBox.TabIndex = 12;
             // 
             // CourseTextBox
             // 
-            this.CourseTextBox.Location = new System.Drawing.Point(138, 186);
+            this.CourseTextBox.Location = new System.Drawing.Point(150, 219);
             this.CourseTextBox.Name = "CourseTextBox";
             this.CourseTextBox.Size = new System.Drawing.Size(156, 20);
             this.CourseTextBox.TabIndex = 13;
@@ -182,7 +183,7 @@
             "Old",
             "Cross-Enrollee",
             "Returnee"});
-            this.RemarksComboBox.Location = new System.Drawing.Point(138, 242);
+            this.RemarksComboBox.Location = new System.Drawing.Point(150, 275);
             this.RemarksComboBox.Name = "RemarksComboBox";
             this.RemarksComboBox.Size = new System.Drawing.Size(100, 21);
             this.RemarksComboBox.TabIndex = 14;
@@ -190,7 +191,7 @@
             // SaveButton
             // 
             this.SaveButton.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveButton.Location = new System.Drawing.Point(84, 288);
+            this.SaveButton.Location = new System.Drawing.Point(96, 321);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(75, 23);
             this.SaveButton.TabIndex = 15;
@@ -201,7 +202,7 @@
             // ClearButton1
             // 
             this.ClearButton1.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ClearButton1.Location = new System.Drawing.Point(163, 288);
+            this.ClearButton1.Location = new System.Drawing.Point(175, 321);
             this.ClearButton1.Name = "ClearButton1";
             this.ClearButton1.Size = new System.Drawing.Size(75, 23);
             this.ClearButton1.TabIndex = 16;
@@ -213,18 +214,42 @@
             // 
             this.StudentEntryLabel.AutoSize = true;
             this.StudentEntryLabel.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StudentEntryLabel.Location = new System.Drawing.Point(99, 23);
+            this.StudentEntryLabel.Location = new System.Drawing.Point(111, 56);
             this.StudentEntryLabel.Name = "StudentEntryLabel";
             this.StudentEntryLabel.Size = new System.Drawing.Size(145, 18);
             this.StudentEntryLabel.TabIndex = 17;
             this.StudentEntryLabel.Text = "STUDENT ENTRY";
             this.StudentEntryLabel.Click += new System.EventHandler(this.StudentEntryLabel_Click);
             // 
+            // ReturnButton
+            // 
+            this.ReturnButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.ReturnButton.Location = new System.Drawing.Point(12, 12);
+            this.ReturnButton.Name = "ReturnButton";
+            this.ReturnButton.Size = new System.Drawing.Size(59, 23);
+            this.ReturnButton.TabIndex = 18;
+            this.ReturnButton.Text = "Return";
+            this.ReturnButton.UseVisualStyleBackColor = false;
+            this.ReturnButton.Click += new System.EventHandler(this.ReturnButton_Click);
+            // 
+            // NextButton
+            // 
+            this.NextButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.NextButton.Location = new System.Drawing.Point(300, 12);
+            this.NextButton.Name = "NextButton";
+            this.NextButton.Size = new System.Drawing.Size(57, 23);
+            this.NextButton.TabIndex = 19;
+            this.NextButton.Text = "Next";
+            this.NextButton.UseVisualStyleBackColor = false;
+            this.NextButton.Click += new System.EventHandler(this.NextButton_Click);
+            // 
             // StudentEntryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(369, 431);
+            this.Controls.Add(this.NextButton);
+            this.Controls.Add(this.ReturnButton);
             this.Controls.Add(this.StudentEntryLabel);
             this.Controls.Add(this.ClearButton1);
             this.Controls.Add(this.SaveButton);
@@ -244,6 +269,7 @@
             this.Controls.Add(this.FirstNameLabel);
             this.Controls.Add(this.IdNumberLabel);
             this.Name = "StudentEntryForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Student Entry";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -270,6 +296,8 @@
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.Button ClearButton1;
         private System.Windows.Forms.Label StudentEntryLabel;
+        private System.Windows.Forms.Button ReturnButton;
+        private System.Windows.Forms.Button NextButton;
     }
 }
 

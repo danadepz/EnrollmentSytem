@@ -59,6 +59,7 @@
             this.CoPreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SubjectInfoPanel = new System.Windows.Forms.Panel();
             this.SubjectScheduleEntryButton = new System.Windows.Forms.Button();
+            this.LogInPageButton = new System.Windows.Forms.Button();
             this.RequisiteInfoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RequisiteDataGridView)).BeginInit();
             this.SubjectInfoPanel.SuspendLayout();
@@ -375,9 +376,8 @@
             // SubjectScheduleEntryButton
             // 
             this.SubjectScheduleEntryButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.SubjectScheduleEntryButton.Enabled = false;
             this.SubjectScheduleEntryButton.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubjectScheduleEntryButton.Location = new System.Drawing.Point(445, 12);
+            this.SubjectScheduleEntryButton.Location = new System.Drawing.Point(481, 12);
             this.SubjectScheduleEntryButton.Name = "SubjectScheduleEntryButton";
             this.SubjectScheduleEntryButton.Size = new System.Drawing.Size(58, 23);
             this.SubjectScheduleEntryButton.TabIndex = 27;
@@ -385,11 +385,23 @@
             this.SubjectScheduleEntryButton.UseVisualStyleBackColor = false;
             this.SubjectScheduleEntryButton.Click += new System.EventHandler(this.SubjectScheduleEntryButton_Click);
             // 
+            // LogInPageButton
+            // 
+            this.LogInPageButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.LogInPageButton.Location = new System.Drawing.Point(12, 12);
+            this.LogInPageButton.Name = "LogInPageButton";
+            this.LogInPageButton.Size = new System.Drawing.Size(67, 23);
+            this.LogInPageButton.TabIndex = 28;
+            this.LogInPageButton.Text = "Return";
+            this.LogInPageButton.UseVisualStyleBackColor = false;
+            this.LogInPageButton.Click += new System.EventHandler(this.LogInPageButton_Click_1);
+            // 
             // SubjectEntryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(551, 513);
+            this.Controls.Add(this.LogInPageButton);
             this.Controls.Add(this.SubjectScheduleEntryButton);
             this.Controls.Add(this.ClearButton2);
             this.Controls.Add(this.SaveButton);
@@ -443,5 +455,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn UnitsColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn CoPreColumn;
         private System.Windows.Forms.Button SubjectScheduleEntryButton;
+        private System.Windows.Forms.Button LogInPageButton;
     }
 }

@@ -13,24 +13,27 @@ namespace EnrollmentSytem
 {
     public partial class SubjectEntryForm : Form
     {
-        private void InitializeComboBox(ComboBox comboBox)
-        {
-            if (comboBox.Items.Count > 0)
-            {
-                comboBox.SelectedIndex = 0;
-            }
-        }
-
         public SubjectEntryForm()
         {
             InitializeComponent();
-            RequisiteDataGridView.RowHeadersVisible = false;
-
-            InitializeComboBox(OfferingComboBox);
-            InitializeComboBox(CategoryComboBox);
-            InitializeComboBox(CourseCodeComboBox);
+            InitializeForm();
         }
 
+        private void InitializeForm()
+        {
+            RequisiteDataGridView.RowHeadersVisible = false;
+            InitializeComboBoxes();
+        }
+
+        private void InitializeComboBoxes()
+        {
+            // Initialize combo boxes with default selections
+            if (OfferingComboBox.Items.Count > 0) OfferingComboBox.SelectedIndex = 0;
+            if (CategoryComboBox.Items.Count > 0) CategoryComboBox.SelectedIndex = 0;
+            if (CourseCodeComboBox.Items.Count > 0) CourseCodeComboBox.SelectedIndex = 0;
+        }
+
+        #region Validation Methods
         private bool ValidateSubjectFields()
         {
             if (string.IsNullOrWhiteSpace(SubjectCodeTextBox.Text) ||
@@ -41,256 +44,224 @@ namespace EnrollmentSytem
                 string.IsNullOrWhiteSpace(CourseCodeComboBox.Text) ||
                 string.IsNullOrWhiteSpace(CurriculumYearTextBox.Text))
             {
-                MessageBox.Show("Some fields are missing.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ShowMessage("Please fill in all required fields.", "Validation Error", MessageBoxIcon.Warning);
                 return false;
             }
+
+            if (!decimal.TryParse(UnitsTextBox.Text, out _))
+            {
+                ShowMessage("Please enter a valid number for units.", "Validation Error", MessageBoxIcon.Warning);
+                UnitsTextBox.Focus();
+                return false;
+            }
+
             return true;
         }
 
+        private bool IsSubjectCodeDuplicate(string subjectCode)
+        {
+            const string query = "SELECT COUNT(*) FROM SubjectFile WHERE SFSUBJCODE = @SFSUBJCODE";
+
+            try
+            {
+                using (var db = new DatabaseConnection())
+                {
+                    db.Open();
+                    int count = Convert.ToInt32(db.ExecuteScalar(query,
+                        new OleDbParameter("@SFSUBJCODE", subjectCode)));
+                    return count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage($"Error checking for duplicate subject code: {ex.Message}", "Database Error");
+                return false;
+            }
+        }
+        #endregion
+
+        #region Database Operations
+        private void FetchSubjectData(string subjectCode)
+        {
+            const string query = @"SELECT SFSUBJCODE, SFSUBJDESC, SFSUBJUNITS, SFSUBJCATEGORY 
+                                FROM SubjectFile 
+                                WHERE SFSUBJCODE = @SFSUBJCODE";
+
+            try
+            {
+                using (var db = new DatabaseConnection())
+                {
+                    db.Open();
+                    DataTable result = db.ExecuteQuery(query,
+                        new OleDbParameter("@SFSUBJCODE", subjectCode));
+
+                    if (result.Rows.Count == 0)
+                    {
+                        ShowMessage("No subject found with the entered code.", "Not Found", MessageBoxIcon.Information);
+                        return;
+                    }
+
+                    foreach (DataRow row in result.Rows)
+                    {
+                        string coPreValue = PreRequisiteRadioButton.Checked ? "Prerequisite" : "Corequisite";
+                        RequisiteDataGridView.Rows.Add(
+                            row["SFSUBJCODE"].ToString(),
+                            row["SFSUBJDESC"].ToString(),
+                            row["SFSUBJUNITS"].ToString(),
+                            coPreValue
+                        );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage($"Error fetching subject data: {ex.Message}", "Database Error");
+            }
+        }
+
+        private void SaveSubjectToDatabase()
+        {
+            if (!ValidateSubjectFields()) return;
+
+            const string checkQuery = "SELECT COUNT(*) FROM SubjectFile WHERE SFSUBJCODE = @SFSUBJCODE";
+            const string insertQuery = @"INSERT INTO SubjectFile 
+                                      (SFSUBJCODE, SFSUBJDESC, SFSUBJUNITS, SFSUBJREGOFRNG, 
+                                       SFSUBJCATEGORY, SFSUBJSTATUS, SFSUBJCOURSECODE, SFSUBJCURRCODE) 
+                                      VALUES 
+                                      (@SFSUBJCODE, @SFSUBJDESC, @SFSUBJUNITS, @SFSUBJREGOFRNG, 
+                                       @SFSUBJCATEGORY, @SFSUBJSTATUS, @SFSUBJCOURSECODE, @SFSUBJCURRCODE)";
+
+            try
+            {
+                using (var db = new DatabaseConnection())
+                {
+                    db.Open();
+
+                    // Check for duplicate
+                    int count = Convert.ToInt32(db.ExecuteScalar(checkQuery,
+                        new OleDbParameter("@SFSUBJCODE", SubjectCodeTextBox.Text)));
+
+                    if (count > 0)
+                    {
+                        ShowMessage("This subject code already exists!", "Duplicate Error", MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Insert new record
+                    db.ExecuteNonQuery(insertQuery,
+                        new OleDbParameter("@SFSUBJCODE", SubjectCodeTextBox.Text),
+                        new OleDbParameter("@SFSUBJDESC", DescriptionTextBox.Text),
+                        new OleDbParameter("@SFSUBJUNITS", UnitsTextBox.Text),
+                        new OleDbParameter("@SFSUBJREGOFRNG", OfferingComboBox.SelectedItem.ToString()),
+                        new OleDbParameter("@SFSUBJCATEGORY", CategoryComboBox.SelectedItem.ToString()),
+                        new OleDbParameter("@SFSUBJSTATUS", "AC"),
+                        new OleDbParameter("@SFSUBJCOURSECODE", CourseCodeComboBox.Text),
+                        new OleDbParameter("@SFSUBJCURRCODE", CurriculumYearTextBox.Text)
+                    );
+
+                    ShowMessage("Subject saved successfully!", "Success", MessageBoxIcon.Information);
+                    ClearForm();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage($"Error saving subject: {ex.Message}", "Error", MessageBoxIcon.Error);
+            }
+        }
+        #endregion
+
+        #region Event Handlers
         private void SubjectCodeReqTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 if (string.IsNullOrWhiteSpace(SubjectCodeReqTextBox.Text))
                 {
-                    MessageBox.Show("Please enter a subject code.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    ShowMessage("Please enter a subject code.", "Validation Error", MessageBoxIcon.Warning);
                     return;
                 }
 
                 FetchSubjectData(SubjectCodeReqTextBox.Text.Trim());
-
                 e.SuppressKeyPress = true;
-            }
-        }
-
-
-        private void FetchSubjectData(string subjectCode)
-        {
-            string connStr = @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\Enrollment_System.accdb;";
-            string query = "SELECT SFSUBJCODE, SFSUBJDESC, SFSUBJUNITS, SFSUBJCATEGORY FROM SubjectFile WHERE SFSUBJCODE = @SFSUBJCODE";
-
-            try
-            {
-                using (OleDbConnection conn = new OleDbConnection(connStr))
-                {
-                    using (OleDbCommand cmd = new OleDbCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@SFSUBJCODE", subjectCode);
-
-                        conn.Open();
-                        using (OleDbDataReader reader = cmd.ExecuteReader())
-                        {
-                            bool dataFound = false;
-
-                            while (reader.Read())
-                            {
-                                dataFound = true;
-
-                                string coPreValue = PreRequisiteRadioButton.Checked ? "Prerequisite" : "Corequisite";
-
-                                RequisiteDataGridView.Rows.Add(
-                                    reader["SFSUBJCODE"].ToString(), 
-                                    reader["SFSUBJDESC"].ToString(), 
-                                    reader["SFSUBJUNITS"].ToString(),
-                                    coPreValue 
-                                );
-                            }
-
-                            if (!dataFound)
-                            {
-                                MessageBox.Show("No subject found with the entered code.", "Not Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error fetching subject data: {ex.Message}");
-            }
-        }
-
-
-        private bool IsSubjectCodeDuplicate(string subjectCode)
-        {
-            string connStr = @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\Enrollment_System.accdb;";
-            string query = "SELECT COUNT(*) FROM SubjectFile WHERE SFSUBJCODE = @SFSUBJCODE";
-
-            try
-            {
-                using (OleDbConnection conn = new OleDbConnection(connStr))
-                {
-                    using (OleDbCommand cmd = new OleDbCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@SFSUBJCODE", subjectCode);
-                        conn.Open();
-                        int count = (int)cmd.ExecuteScalar();
-                        return count > 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error checking for duplicate subject code: {ex.Message}");
-                return false;
             }
         }
 
         private void SubjectCodeTextBox_Leave(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(SubjectCodeTextBox.Text) &&
-                IsSubjectCodeDuplicate(SubjectCodeTextBox.Text))
+            if (!string.IsNullOrWhiteSpace(SubjectCodeTextBox.Text))
             {
-                SubjectCodeTextBox.BackColor = Color.LightPink;
-                MessageBox.Show("This subject code already exists!", "Duplicate Found",
-                               MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                SubjectCodeTextBox.Focus();
+                if (IsSubjectCodeDuplicate(SubjectCodeTextBox.Text))
+                {
+                    SubjectCodeTextBox.BackColor = Color.LightPink;
+                    ShowMessage("This subject code already exists!", "Duplicate Found", MessageBoxIcon.Warning);
+                    SubjectCodeTextBox.Focus();
+                }
+                else
+                {
+                    SubjectCodeTextBox.BackColor = SystemColors.Window;
+                }
             }
-            else
-            {
-                SubjectCodeTextBox.BackColor = SystemColors.Window;
-            }
-        }
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            if (!ValidateSubjectFields()) return;
-
-            if (IsSubjectCodeDuplicate(SubjectCodeTextBox.Text))
-            {
-                MessageBox.Show("Duplicate Entries Found! This subject code already exists.",
-                               "Duplicate Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            string connStr = @"Provider=Microsoft.ACE.OLEDB.16.0;Data Source=C:\Users\kimpc\Desktop\dePaz_EnrollmentSystem\Enrollment_System.accdb;";
-
-            string subjectQuery = "INSERT INTO SubjectFile (SFSUBJCODE, SFSUBJDESC, SFSUBJUNITS, SFSUBJREFOFRNG, SFSUBJCATEGORY, SFSUBJSTATUS, SFSUBJCOURSECODE, SFSUBJCURRCODE) " +
-                                  "VALUES (@SFSUBJCODE, @SFSUBJDESC, @SFSUBJUNITS, @SFSUBJREFOFRNG, @SFSUBJCATEGORY, @SFSUBJSTATUS, @SFSUBJCOURSECODE, @SFSUBJCURRCODE)";
-
-            string requisiteQuery = "INSERT INTO SubjectPreqFile (SUBJCODE, SUBJPRECODE, SUBJCATEGORY) " +
-                                    "VALUES (@SUBJCODE, @SUBJPRECODE, @SUBJCATEGORY)";
-
-            try
-            {
-                using (OleDbConnection conn = new OleDbConnection(connStr))
-                {
-                    conn.Open();
-
-                    //SubjectFile
-                    using (OleDbCommand subjectCmd = new OleDbCommand(subjectQuery, conn))
-                    {
-                        subjectCmd.Parameters.AddWithValue("@SFSUBJCODE", SubjectCodeTextBox.Text);
-                        subjectCmd.Parameters.AddWithValue("@SFSUBJDESC", DescriptionTextBox.Text);
-                        subjectCmd.Parameters.AddWithValue("@SFSUBJUNITS", UnitsTextBox.Text);
-                        subjectCmd.Parameters.AddWithValue("@SFSUBJREFOFRNG", OfferingComboBox.SelectedItem.ToString());
-                        subjectCmd.Parameters.AddWithValue("@SFSUBJCATEGORY", CategoryComboBox.SelectedItem.ToString());
-                        subjectCmd.Parameters.AddWithValue("@SFSUBJSTATUS", "AC");
-                        subjectCmd.Parameters.AddWithValue("@SFSUBJCOURSECODE", CourseCodeComboBox.Text);
-                        subjectCmd.Parameters.AddWithValue("@SFSUBJCURRCODE", CurriculumYearTextBox.Text);
-
-                        subjectCmd.ExecuteNonQuery();
-                    }
-
-                    //DataGridView
-                    List<string> prerequisites = new List<string>();
-                    string subjCategory = PreRequisiteRadioButton.Checked ? "PR" : "CR";
-
-                    foreach (DataGridViewRow row in RequisiteDataGridView.Rows)
-                    {
-                        if (row.Cells[0].Value != null)
-                        {
-                            prerequisites.Add(row.Cells[0].Value.ToString()); // Add the subject code
-                        }
-                    }
-
-                    //Separate with a comma
-                    string prerequisiteCodes = string.Join(",", prerequisites);
-
-                    // Save to SubjectPreqFile if there are prerequisites
-                    if (!string.IsNullOrWhiteSpace(prerequisiteCodes))
-                    {
-                        using (OleDbCommand requisiteCmd = new OleDbCommand(requisiteQuery, conn))
-                        {
-                            requisiteCmd.Parameters.AddWithValue("@SUBJCODE", SubjectCodeTextBox.Text);
-                            requisiteCmd.Parameters.AddWithValue("@SUBJPRECODE", prerequisiteCodes);
-                            requisiteCmd.Parameters.AddWithValue("@SUBJCATEGORY", subjCategory);
-
-                            requisiteCmd.ExecuteNonQuery();
-                        }
-                    }
-
-                    SubjectScheduleEntryButton.Enabled = true;
-
-                    MessageBox.Show("Entries Recorded!");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}");
-            }
-        }
-
-
-        private void SubjectScheduleEntryButton_Click(object sender, EventArgs e)
-        {
-            SubjectScheduleEntryForm subjectScheduleEntryForm = new SubjectScheduleEntryForm();
-            subjectScheduleEntryForm.Show();
-            this.Hide();
+            SaveSubjectToDatabase();
         }
 
         private void ClearButton2_Click(object sender, EventArgs e)
         {
-            foreach (Control control in this.Controls)
-            {
-                if (control is Panel panel)
-                {
-                    foreach (Control panelControl in panel.Controls)
-                    {
-                        if (panelControl is TextBox textBox)
-                        {
-                            textBox.Text = string.Empty;
-                        }
-                        else if (panelControl is ComboBox comboBox)
-                        {
-                            if (comboBox.Items.Count > 0)
-                            {
-                                comboBox.SelectedIndex = 0;
-                            }
-                        }
-                        else if (panelControl is RadioButton radioButton)
-                        {
-                            radioButton.Checked = false;
-                        }
-                    }
-                }
-            }
+            ClearForm();
+        }
+
+        private void ClearForm()
+        {
+            // Clear textboxes
+            SubjectCodeTextBox.Clear();
+            DescriptionTextBox.Clear();
+            UnitsTextBox.Clear();
+            CurriculumYearTextBox.Clear();
+            SubjectCodeReqTextBox.Clear();
+
+            // Reset comboboxes
+            InitializeComboBoxes();
+
+            // Clear radio buttons and datagrid
+            PreRequisiteRadioButton.Checked = false;
+            CoRequisiteRadioButton.Checked = false;
             RequisiteDataGridView.Rows.Clear();
+
+            // Reset focus
             SubjectCodeTextBox.Focus();
         }
 
-        private void SubjectEntryForm_Load(object sender, EventArgs e)
+        private void SubjectScheduleEntryButton_Click(object sender, EventArgs e)
         {
-
+            SubjectScheduleEntryForm subjectScheduleEntryForm = new SubjectScheduleEntryForm(); 
+            subjectScheduleEntryForm.Show();
+            this.Hide();
         }
+
+        private void LogInPageButton_Click_1(object sender, EventArgs e)
+        {
+            Start start = new Start();
+            start.Show();
+            this.Hide();
+        }
+
+        #endregion
+
+        #region Helper Methods
+        private void ShowMessage(string message, string title, MessageBoxIcon icon = MessageBoxIcon.Information)
+        {
+            MessageBox.Show(message, title, MessageBoxButtons.OK, icon);
+        }
+        #endregion
+
+        #region Unused Event Handlers
+        private void label4_Click(object sender, EventArgs e) { }
+        private void panel1_Paint(object sender, PaintEventArgs e) { }
+        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e) { }
+        private void SubjectEntryForm_Load(object sender, EventArgs e) { }
+        #endregion
     }
 }

@@ -42,19 +42,21 @@
             this.NameTextBox = new System.Windows.Forms.TextBox();
             this.EdpCodeTextBox = new System.Windows.Forms.TextBox();
             this.YearTextBox = new System.Windows.Forms.TextBox();
-            this.DateTextBox = new System.Windows.Forms.TextBox();
             this.TotalUnitsTextBox = new System.Windows.Forms.TextBox();
             this.EncodedByTextBox = new System.Windows.Forms.TextBox();
             this.SaveButton = new System.Windows.Forms.Button();
             this.ClearButton4 = new System.Windows.Forms.Button();
             this.StudentEnrollmentEntryDataGridView = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EdpCodeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SubjectCodeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StartTimeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EndTimeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DaysColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RoomColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UnitsColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DeleteSubjButton = new System.Windows.Forms.Button();
+            this.StudentDateEnrollPicker = new System.Windows.Forms.DateTimePicker();
+            this.BackButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.StudentEnrollmentEntryDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -102,7 +104,7 @@
             // 
             this.YearLabel.AutoSize = true;
             this.YearLabel.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.YearLabel.Location = new System.Drawing.Point(233, 162);
+            this.YearLabel.Location = new System.Drawing.Point(332, 81);
             this.YearLabel.Name = "YearLabel";
             this.YearLabel.Size = new System.Drawing.Size(33, 15);
             this.YearLabel.TabIndex = 4;
@@ -132,7 +134,7 @@
             // 
             this.TotalUnitsLabel.AutoSize = true;
             this.TotalUnitsLabel.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TotalUnitsLabel.Location = new System.Drawing.Point(618, 457);
+            this.TotalUnitsLabel.Location = new System.Drawing.Point(630, 457);
             this.TotalUnitsLabel.Name = "TotalUnitsLabel";
             this.TotalUnitsLabel.Size = new System.Drawing.Size(67, 15);
             this.TotalUnitsLabel.TabIndex = 7;
@@ -154,11 +156,13 @@
             this.IdNumberTextBox.Name = "IdNumberTextBox";
             this.IdNumberTextBox.Size = new System.Drawing.Size(100, 20);
             this.IdNumberTextBox.TabIndex = 9;
+            this.IdNumberTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.IdNumberTextBox_KeyDown);
             // 
             // CourseTextBox
             // 
             this.CourseTextBox.Location = new System.Drawing.Point(100, 133);
             this.CourseTextBox.Name = "CourseTextBox";
+            this.CourseTextBox.ReadOnly = true;
             this.CourseTextBox.Size = new System.Drawing.Size(100, 20);
             this.CourseTextBox.TabIndex = 10;
             // 
@@ -166,6 +170,7 @@
             // 
             this.NameTextBox.Location = new System.Drawing.Point(100, 106);
             this.NameTextBox.Name = "NameTextBox";
+            this.NameTextBox.ReadOnly = true;
             this.NameTextBox.Size = new System.Drawing.Size(214, 20);
             this.NameTextBox.TabIndex = 11;
             // 
@@ -175,25 +180,21 @@
             this.EdpCodeTextBox.Name = "EdpCodeTextBox";
             this.EdpCodeTextBox.Size = new System.Drawing.Size(100, 20);
             this.EdpCodeTextBox.TabIndex = 12;
+            this.EdpCodeTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EdpCodeTextBox_KeyDown);
             // 
             // YearTextBox
             // 
-            this.YearTextBox.Location = new System.Drawing.Point(268, 159);
+            this.YearTextBox.Location = new System.Drawing.Point(367, 78);
             this.YearTextBox.Name = "YearTextBox";
+            this.YearTextBox.ReadOnly = true;
             this.YearTextBox.Size = new System.Drawing.Size(100, 20);
             this.YearTextBox.TabIndex = 13;
             // 
-            // DateTextBox
-            // 
-            this.DateTextBox.Location = new System.Drawing.Point(335, 476);
-            this.DateTextBox.Name = "DateTextBox";
-            this.DateTextBox.Size = new System.Drawing.Size(132, 20);
-            this.DateTextBox.TabIndex = 14;
-            // 
             // TotalUnitsTextBox
             // 
-            this.TotalUnitsTextBox.Location = new System.Drawing.Point(691, 455);
+            this.TotalUnitsTextBox.Location = new System.Drawing.Point(703, 455);
             this.TotalUnitsTextBox.Name = "TotalUnitsTextBox";
+            this.TotalUnitsTextBox.ReadOnly = true;
             this.TotalUnitsTextBox.Size = new System.Drawing.Size(79, 20);
             this.TotalUnitsTextBox.TabIndex = 15;
             // 
@@ -207,17 +208,18 @@
             // SaveButton
             // 
             this.SaveButton.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveButton.Location = new System.Drawing.Point(318, 540);
+            this.SaveButton.Location = new System.Drawing.Point(321, 527);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(75, 23);
             this.SaveButton.TabIndex = 17;
             this.SaveButton.Text = "Save";
             this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
             // ClearButton4
             // 
             this.ClearButton4.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ClearButton4.Location = new System.Drawing.Point(413, 540);
+            this.ClearButton4.Location = new System.Drawing.Point(416, 527);
             this.ClearButton4.Name = "ClearButton4";
             this.ClearButton4.Size = new System.Drawing.Size(75, 23);
             this.ClearButton4.TabIndex = 18;
@@ -229,71 +231,102 @@
             // 
             this.StudentEnrollmentEntryDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.StudentEnrollmentEntryDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3,
-            this.Column4,
-            this.Column5,
-            this.Column6,
-            this.Column7});
+            this.EdpCodeColumn,
+            this.SubjectCodeColumn,
+            this.StartTimeColumn,
+            this.EndTimeColumn,
+            this.DaysColumn,
+            this.RoomColumn,
+            this.UnitsColumn});
             this.StudentEnrollmentEntryDataGridView.Location = new System.Drawing.Point(39, 192);
             this.StudentEnrollmentEntryDataGridView.Name = "StudentEnrollmentEntryDataGridView";
-            this.StudentEnrollmentEntryDataGridView.Size = new System.Drawing.Size(745, 257);
+            this.StudentEnrollmentEntryDataGridView.Size = new System.Drawing.Size(743, 257);
             this.StudentEnrollmentEntryDataGridView.TabIndex = 19;
             // 
-            // Column1
+            // EdpCodeColumn
             // 
-            this.Column1.HeaderText = "EDP Code";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
+            this.EdpCodeColumn.HeaderText = "EDP Code";
+            this.EdpCodeColumn.Name = "EdpCodeColumn";
+            this.EdpCodeColumn.ReadOnly = true;
             // 
-            // Column2
+            // SubjectCodeColumn
             // 
-            this.Column2.HeaderText = "Subject Code";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
+            this.SubjectCodeColumn.HeaderText = "Subject Code";
+            this.SubjectCodeColumn.Name = "SubjectCodeColumn";
+            this.SubjectCodeColumn.ReadOnly = true;
             // 
-            // Column3
+            // StartTimeColumn
             // 
-            this.Column3.HeaderText = "Start Time";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
+            this.StartTimeColumn.HeaderText = "Start Time";
+            this.StartTimeColumn.Name = "StartTimeColumn";
+            this.StartTimeColumn.ReadOnly = true;
             // 
-            // Column4
+            // EndTimeColumn
             // 
-            this.Column4.HeaderText = "End Time";
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
+            this.EndTimeColumn.HeaderText = "End Time";
+            this.EndTimeColumn.Name = "EndTimeColumn";
+            this.EndTimeColumn.ReadOnly = true;
             // 
-            // Column5
+            // DaysColumn
             // 
-            this.Column5.HeaderText = "Days";
-            this.Column5.Name = "Column5";
-            this.Column5.ReadOnly = true;
+            this.DaysColumn.HeaderText = "Days";
+            this.DaysColumn.Name = "DaysColumn";
+            this.DaysColumn.ReadOnly = true;
             // 
-            // Column6
+            // RoomColumn
             // 
-            this.Column6.HeaderText = "Room";
-            this.Column6.Name = "Column6";
-            this.Column6.ReadOnly = true;
+            this.RoomColumn.HeaderText = "Room";
+            this.RoomColumn.Name = "RoomColumn";
+            this.RoomColumn.ReadOnly = true;
             // 
-            // Column7
+            // UnitsColumn
             // 
-            this.Column7.HeaderText = "Units";
-            this.Column7.Name = "Column7";
-            this.Column7.ReadOnly = true;
+            this.UnitsColumn.HeaderText = "Units";
+            this.UnitsColumn.Name = "UnitsColumn";
+            this.UnitsColumn.ReadOnly = true;
+            // 
+            // DeleteSubjButton
+            // 
+            this.DeleteSubjButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.DeleteSubjButton.Location = new System.Drawing.Point(707, 162);
+            this.DeleteSubjButton.Name = "DeleteSubjButton";
+            this.DeleteSubjButton.Size = new System.Drawing.Size(75, 23);
+            this.DeleteSubjButton.TabIndex = 20;
+            this.DeleteSubjButton.Text = "Delete";
+            this.DeleteSubjButton.UseVisualStyleBackColor = false;
+            this.DeleteSubjButton.Click += new System.EventHandler(this.DeleteSubjButton_Click_1);
+            // 
+            // StudentDateEnrollPicker
+            // 
+            this.StudentDateEnrollPicker.Location = new System.Drawing.Point(335, 474);
+            this.StudentDateEnrollPicker.Name = "StudentDateEnrollPicker";
+            this.StudentDateEnrollPicker.Size = new System.Drawing.Size(200, 20);
+            this.StudentDateEnrollPicker.TabIndex = 21;
+            // 
+            // BackButton
+            // 
+            this.BackButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.BackButton.Location = new System.Drawing.Point(12, 12);
+            this.BackButton.Name = "BackButton";
+            this.BackButton.Size = new System.Drawing.Size(57, 23);
+            this.BackButton.TabIndex = 22;
+            this.BackButton.Text = "Back";
+            this.BackButton.UseVisualStyleBackColor = false;
+            this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
             // 
             // StudentEnrollmentEntryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(821, 575);
+            this.ClientSize = new System.Drawing.Size(816, 575);
+            this.Controls.Add(this.BackButton);
+            this.Controls.Add(this.StudentDateEnrollPicker);
+            this.Controls.Add(this.DeleteSubjButton);
             this.Controls.Add(this.StudentEnrollmentEntryDataGridView);
             this.Controls.Add(this.ClearButton4);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.EncodedByTextBox);
             this.Controls.Add(this.TotalUnitsTextBox);
-            this.Controls.Add(this.DateTextBox);
             this.Controls.Add(this.YearTextBox);
             this.Controls.Add(this.EdpCodeTextBox);
             this.Controls.Add(this.NameTextBox);
@@ -333,18 +366,20 @@
         private System.Windows.Forms.TextBox NameTextBox;
         private System.Windows.Forms.TextBox EdpCodeTextBox;
         private System.Windows.Forms.TextBox YearTextBox;
-        private System.Windows.Forms.TextBox DateTextBox;
         private System.Windows.Forms.TextBox TotalUnitsTextBox;
         private System.Windows.Forms.TextBox EncodedByTextBox;
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.Button ClearButton4;
         private System.Windows.Forms.DataGridView StudentEnrollmentEntryDataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
+        private System.Windows.Forms.Button DeleteSubjButton;
+        private System.Windows.Forms.DateTimePicker StudentDateEnrollPicker;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EdpCodeColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SubjectCodeColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn StartTimeColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EndTimeColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DaysColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RoomColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn UnitsColumn;
+        private System.Windows.Forms.Button BackButton;
     }
 }

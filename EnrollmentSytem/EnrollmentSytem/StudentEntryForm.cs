@@ -146,5 +146,19 @@ namespace EnrollmentSytem
         {
 
         }
+
+        private void ReturnButton_Click(object sender, EventArgs e)
+        {
+            Start start = new Start();
+            start.Show();
+            this.Hide();
+        }
+
+        private void NextButton_Click(object sender, EventArgs e)
+        {
+            StudentEnrollmentEntryForm studentEnrollmentEntryForm = new StudentEnrollmentEntryForm();
+            studentEnrollmentEntryForm.Show();
+            this.Hide();
+        }
     }
 }
