@@ -46,21 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseConnection.cs" />
+    <Compile Include="StudentGrades.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StudentGrades.Designer.cs">
+      <DependentUpon>StudentGrades.cs</DependentUpon>
+    </Compile>
     <Compile Include="Start.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Start.Designer.cs">
       <DependentUpon>Start.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form3.cs" />
-    <Compile Include="Form3.Designer.cs">
-      <DependentUpon>Form3.cs</DependentUpon>
     </Compile>
     <Compile Include="StudentEntryForm.cs">
       <SubType>Form</SubType>
@@ -73,12 +70,6 @@
     </Compile>
     <Compile Include="SubjectEntryForm.Designer.cs">
       <DependentUpon>SubjectEntryForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LoginForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LoginForm.Designer.cs">
-      <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SubjectScheduleEntryForm.cs">
       <SubType>Form</SubType>
@@ -97,17 +88,14 @@
     <EmbeddedResource Include="Start.resx">
       <DependentUpon>Start.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="StudentEntryForm.resx">
       <DependentUpon>StudentEntryForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="StudentGrades.resx">
+      <DependentUpon>StudentGrades.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SubjectEntryForm.resx">
       <DependentUpon>SubjectEntryForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LoginForm.resx">
-      <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SubjectScheduleEntryForm.resx">
       <DependentUpon>SubjectScheduleEntryForm.cs</DependentUpon>

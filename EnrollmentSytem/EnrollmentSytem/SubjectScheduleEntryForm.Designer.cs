@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.SubjectScheduleEntryLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -48,7 +47,7 @@
             this.SectionTextBox = new System.Windows.Forms.TextBox();
             this.DescriptionTextBox = new System.Windows.Forms.TextBox();
             this.SubjectCodeTextBox = new System.Windows.Forms.TextBox();
-            this.StartAmPmComboBox = new System.Windows.Forms.ComboBox();
+            this.AmPmComboBox = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.MondayCheckBox = new System.Windows.Forms.CheckBox();
             this.TuesdayCheckBox = new System.Windows.Forms.CheckBox();
@@ -56,14 +55,12 @@
             this.ThursdayCheckBox = new System.Windows.Forms.CheckBox();
             this.FridayCheckBox = new System.Windows.Forms.CheckBox();
             this.SaturdayCheckBox = new System.Windows.Forms.CheckBox();
-            this.TimeStartHourComboBox = new System.Windows.Forms.ComboBox();
-            this.TimeEndHourComboBox = new System.Windows.Forms.ComboBox();
-            this.TimeStartMinComboBox = new System.Windows.Forms.ComboBox();
-            this.TimeEndMinComboBox = new System.Windows.Forms.ComboBox();
             this.MaxSizeLabel = new System.Windows.Forms.Label();
-            this.EndAmPmComboBox = new System.Windows.Forms.ComboBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.MaxSizeTextBox = new System.Windows.Forms.TextBox();
+            this.StartTimeHourComboBox = new System.Windows.Forms.ComboBox();
+            this.EndTimeHourComboBox = new System.Windows.Forms.ComboBox();
+            this.EndTimeMinComboBox = new System.Windows.Forms.ComboBox();
+            this.StartTimeMinComboBox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // SubjectScheduleEntryLabel
@@ -80,7 +77,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(511, 110);
+            this.label2.Location = new System.Drawing.Point(521, 110);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(50, 15);
@@ -234,6 +231,7 @@
             // 
             // DescriptionTextBox
             // 
+            this.DescriptionTextBox.BackColor = System.Drawing.Color.Silver;
             this.DescriptionTextBox.Location = new System.Drawing.Point(182, 163);
             this.DescriptionTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.DescriptionTextBox.Name = "DescriptionTextBox";
@@ -248,19 +246,19 @@
             this.SubjectCodeTextBox.Size = new System.Drawing.Size(116, 21);
             this.SubjectCodeTextBox.TabIndex = 21;
             // 
-            // StartAmPmComboBox
+            // AmPmComboBox
             // 
-            this.StartAmPmComboBox.FormattingEnabled = true;
-            this.StartAmPmComboBox.Items.AddRange(new object[] {
+            this.AmPmComboBox.FormattingEnabled = true;
+            this.AmPmComboBox.Items.AddRange(new object[] {
             "--Choose--",
             "AM",
             "PM"});
-            this.StartAmPmComboBox.Location = new System.Drawing.Point(569, 107);
-            this.StartAmPmComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.StartAmPmComboBox.Name = "StartAmPmComboBox";
-            this.StartAmPmComboBox.Size = new System.Drawing.Size(65, 23);
-            this.StartAmPmComboBox.TabIndex = 22;
-            this.StartAmPmComboBox.SelectedIndexChanged += new System.EventHandler(this.AmPmComboBox_SelectedIndexChanged);
+            this.AmPmComboBox.Location = new System.Drawing.Point(579, 107);
+            this.AmPmComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.AmPmComboBox.Name = "AmPmComboBox";
+            this.AmPmComboBox.Size = new System.Drawing.Size(58, 23);
+            this.AmPmComboBox.TabIndex = 22;
+            this.AmPmComboBox.SelectedIndexChanged += new System.EventHandler(this.AmPmComboBox_SelectedIndexChanged);
             // 
             // button1
             // 
@@ -333,74 +331,6 @@
             this.SaturdayCheckBox.Text = "Saturday";
             this.SaturdayCheckBox.UseVisualStyleBackColor = true;
             // 
-            // TimeStartHourComboBox
-            // 
-            this.TimeStartHourComboBox.FormattingEnabled = true;
-            this.TimeStartHourComboBox.Items.AddRange(new object[] {
-            "-H-",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12"});
-            this.TimeStartHourComboBox.Location = new System.Drawing.Point(388, 107);
-            this.TimeStartHourComboBox.Name = "TimeStartHourComboBox";
-            this.TimeStartHourComboBox.Size = new System.Drawing.Size(54, 23);
-            this.TimeStartHourComboBox.TabIndex = 39;
-            // 
-            // TimeEndHourComboBox
-            // 
-            this.TimeEndHourComboBox.FormattingEnabled = true;
-            this.TimeEndHourComboBox.Items.AddRange(new object[] {
-            "-H-",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12"});
-            this.TimeEndHourComboBox.Location = new System.Drawing.Point(388, 132);
-            this.TimeEndHourComboBox.Name = "TimeEndHourComboBox";
-            this.TimeEndHourComboBox.Size = new System.Drawing.Size(54, 23);
-            this.TimeEndHourComboBox.TabIndex = 40;
-            // 
-            // TimeStartMinComboBox
-            // 
-            this.TimeStartMinComboBox.FormattingEnabled = true;
-            this.TimeStartMinComboBox.Items.AddRange(new object[] {
-            "-M-",
-            "00",
-            "30"});
-            this.TimeStartMinComboBox.Location = new System.Drawing.Point(450, 107);
-            this.TimeStartMinComboBox.Name = "TimeStartMinComboBox";
-            this.TimeStartMinComboBox.Size = new System.Drawing.Size(54, 23);
-            this.TimeStartMinComboBox.TabIndex = 41;
-            // 
-            // TimeEndMinComboBox
-            // 
-            this.TimeEndMinComboBox.FormattingEnabled = true;
-            this.TimeEndMinComboBox.Items.AddRange(new object[] {
-            "-M-",
-            "00",
-            "30"});
-            this.TimeEndMinComboBox.Location = new System.Drawing.Point(450, 132);
-            this.TimeEndMinComboBox.Name = "TimeEndMinComboBox";
-            this.TimeEndMinComboBox.Size = new System.Drawing.Size(54, 23);
-            this.TimeEndMinComboBox.TabIndex = 42;
-            // 
             // MaxSizeLabel
             // 
             this.MaxSizeLabel.AutoSize = true;
@@ -412,29 +342,6 @@
             this.MaxSizeLabel.Text = "Max Size:";
             this.MaxSizeLabel.Click += new System.EventHandler(this.label1_Click);
             // 
-            // EndAmPmComboBox
-            // 
-            this.EndAmPmComboBox.FormattingEnabled = true;
-            this.EndAmPmComboBox.Items.AddRange(new object[] {
-            "--Choose--",
-            "AM",
-            "PM"});
-            this.EndAmPmComboBox.Location = new System.Drawing.Point(569, 132);
-            this.EndAmPmComboBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.EndAmPmComboBox.Name = "EndAmPmComboBox";
-            this.EndAmPmComboBox.Size = new System.Drawing.Size(65, 23);
-            this.EndAmPmComboBox.TabIndex = 45;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(511, 135);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(50, 15);
-            this.label12.TabIndex = 44;
-            this.label12.Text = "AM/PM:";
-            // 
             // MaxSizeTextBox
             // 
             this.MaxSizeTextBox.Location = new System.Drawing.Point(411, 244);
@@ -443,19 +350,81 @@
             this.MaxSizeTextBox.Size = new System.Drawing.Size(75, 21);
             this.MaxSizeTextBox.TabIndex = 46;
             // 
+            // StartTimeHourComboBox
+            // 
+            this.StartTimeHourComboBox.FormattingEnabled = true;
+            this.StartTimeHourComboBox.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12"});
+            this.StartTimeHourComboBox.Location = new System.Drawing.Point(386, 105);
+            this.StartTimeHourComboBox.Name = "StartTimeHourComboBox";
+            this.StartTimeHourComboBox.Size = new System.Drawing.Size(54, 23);
+            this.StartTimeHourComboBox.TabIndex = 47;
+            // 
+            // EndTimeHourComboBox
+            // 
+            this.EndTimeHourComboBox.FormattingEnabled = true;
+            this.EndTimeHourComboBox.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12"});
+            this.EndTimeHourComboBox.Location = new System.Drawing.Point(386, 132);
+            this.EndTimeHourComboBox.Name = "EndTimeHourComboBox";
+            this.EndTimeHourComboBox.Size = new System.Drawing.Size(54, 23);
+            this.EndTimeHourComboBox.TabIndex = 48;
+            // 
+            // EndTimeMinComboBox
+            // 
+            this.EndTimeMinComboBox.FormattingEnabled = true;
+            this.EndTimeMinComboBox.Items.AddRange(new object[] {
+            "00",
+            "30"});
+            this.EndTimeMinComboBox.Location = new System.Drawing.Point(446, 132);
+            this.EndTimeMinComboBox.Name = "EndTimeMinComboBox";
+            this.EndTimeMinComboBox.Size = new System.Drawing.Size(54, 23);
+            this.EndTimeMinComboBox.TabIndex = 49;
+            // 
+            // StartTimeMinComboBox
+            // 
+            this.StartTimeMinComboBox.FormattingEnabled = true;
+            this.StartTimeMinComboBox.Items.AddRange(new object[] {
+            "00",
+            "30"});
+            this.StartTimeMinComboBox.Location = new System.Drawing.Point(446, 105);
+            this.StartTimeMinComboBox.Name = "StartTimeMinComboBox";
+            this.StartTimeMinComboBox.Size = new System.Drawing.Size(54, 23);
+            this.StartTimeMinComboBox.TabIndex = 50;
+            // 
             // SubjectScheduleEntryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(715, 440);
+            this.Controls.Add(this.StartTimeMinComboBox);
+            this.Controls.Add(this.EndTimeMinComboBox);
+            this.Controls.Add(this.EndTimeHourComboBox);
+            this.Controls.Add(this.StartTimeHourComboBox);
             this.Controls.Add(this.MaxSizeTextBox);
-            this.Controls.Add(this.EndAmPmComboBox);
-            this.Controls.Add(this.label12);
             this.Controls.Add(this.MaxSizeLabel);
-            this.Controls.Add(this.TimeEndMinComboBox);
-            this.Controls.Add(this.TimeStartMinComboBox);
-            this.Controls.Add(this.TimeEndHourComboBox);
-            this.Controls.Add(this.TimeStartHourComboBox);
             this.Controls.Add(this.SaturdayCheckBox);
             this.Controls.Add(this.FridayCheckBox);
             this.Controls.Add(this.ThursdayCheckBox);
@@ -463,7 +432,7 @@
             this.Controls.Add(this.TuesdayCheckBox);
             this.Controls.Add(this.MondayCheckBox);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.StartAmPmComboBox);
+            this.Controls.Add(this.AmPmComboBox);
             this.Controls.Add(this.SubjectCodeTextBox);
             this.Controls.Add(this.DescriptionTextBox);
             this.Controls.Add(this.SectionTextBox);
@@ -486,6 +455,7 @@
             this.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "SubjectScheduleEntryForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Subject Schedule";
             this.Load += new System.EventHandler(this.SubjectScheduleEntryForm_Load);
             this.ResumeLayout(false);
@@ -514,7 +484,7 @@
         private System.Windows.Forms.TextBox SectionTextBox;
         private System.Windows.Forms.TextBox DescriptionTextBox;
         private System.Windows.Forms.TextBox SubjectCodeTextBox;
-        private System.Windows.Forms.ComboBox StartAmPmComboBox;
+        private System.Windows.Forms.ComboBox AmPmComboBox;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox MondayCheckBox;
         private System.Windows.Forms.CheckBox TuesdayCheckBox;
@@ -522,13 +492,11 @@
         private System.Windows.Forms.CheckBox ThursdayCheckBox;
         private System.Windows.Forms.CheckBox FridayCheckBox;
         private System.Windows.Forms.CheckBox SaturdayCheckBox;
-        private System.Windows.Forms.ComboBox TimeStartHourComboBox;
-        private System.Windows.Forms.ComboBox TimeEndHourComboBox;
-        private System.Windows.Forms.ComboBox TimeStartMinComboBox;
-        private System.Windows.Forms.ComboBox TimeEndMinComboBox;
         private System.Windows.Forms.Label MaxSizeLabel;
-        private System.Windows.Forms.ComboBox EndAmPmComboBox;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox MaxSizeTextBox;
+        private System.Windows.Forms.ComboBox StartTimeHourComboBox;
+        private System.Windows.Forms.ComboBox EndTimeHourComboBox;
+        private System.Windows.Forms.ComboBox EndTimeMinComboBox;
+        private System.Windows.Forms.ComboBox StartTimeMinComboBox;
     }
 }
