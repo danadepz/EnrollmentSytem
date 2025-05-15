@@ -46,6 +46,7 @@
             this.YearTextBox = new System.Windows.Forms.TextBox();
             this.CourseTextBox = new System.Windows.Forms.TextBox();
             this.StudentNameTextBox = new System.Windows.Forms.TextBox();
+            this.ReturnButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.GradesDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -163,10 +164,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("MS Reference Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(200, 33);
+            this.label1.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(209, 25);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(157, 15);
+            this.label1.Size = new System.Drawing.Size(217, 18);
             this.label1.TabIndex = 8;
             this.label1.Text = "Student Grade Entry Form";
             // 
@@ -205,11 +206,23 @@
             this.StudentNameTextBox.Size = new System.Drawing.Size(214, 21);
             this.StudentNameTextBox.TabIndex = 12;
             // 
+            // ReturnButton
+            // 
+            this.ReturnButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.ReturnButton.Location = new System.Drawing.Point(12, 12);
+            this.ReturnButton.Name = "ReturnButton";
+            this.ReturnButton.Size = new System.Drawing.Size(64, 23);
+            this.ReturnButton.TabIndex = 13;
+            this.ReturnButton.Text = "Return";
+            this.ReturnButton.UseVisualStyleBackColor = false;
+            this.ReturnButton.Click += new System.EventHandler(this.ReturnButton_Click);
+            // 
             // StudentGrades
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(632, 450);
+            this.Controls.Add(this.ReturnButton);
             this.Controls.Add(this.StudentNameTextBox);
             this.Controls.Add(this.CourseTextBox);
             this.Controls.Add(this.YearTextBox);
@@ -250,5 +263,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn DescriptionColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn GradeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn RemarksColumn;
+        private System.Windows.Forms.Button ReturnButton;
     }
 }

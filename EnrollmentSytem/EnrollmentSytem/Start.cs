@@ -98,8 +98,8 @@ namespace EnrollmentSytem
         {
             if (e.KeyCode == Keys.Enter)
             {
-                Button1_Click(sender, e); // Call the login logic
-                e.SuppressKeyPress = true; // Prevent the Enter key from triggering other default behaviors
+                Button1_Click(sender, e);
+                e.SuppressKeyPress = true; 
             }
         }
     }

@@ -291,6 +291,11 @@ namespace EnrollmentSytem
             GradesDataGridView.DataSource = null;
         }
 
-        
+        private void ReturnButton_Click(object sender, EventArgs e)
+        {
+            Start start = new Start();
+            start.Show();
+            this.Hide();
+        }
     }
 }

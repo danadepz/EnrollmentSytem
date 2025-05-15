@@ -1,6 +1,8 @@
 using System;
 using System.Data;
 using System.Data.OleDb;
+using System.Diagnostics;
+using System.Linq;
 
 namespace EnrollmentSytem
 {
@@ -48,17 +50,27 @@ namespace EnrollmentSytem
 
         public DataTable ExecuteQuery(string query, params OleDbParameter[] parameters)
         {
-            using (var cmd = new OleDbCommand(query, connection, transaction))
+            try
             {
-                if (parameters != null)
-                    cmd.Parameters.AddRange(parameters);
-
-                using (var adapter = new OleDbDataAdapter(cmd))
+                using (var cmd = new OleDbCommand(query, connection, transaction))
                 {
-                    var dt = new DataTable();
-                    adapter.Fill(dt);
-                    return dt;
+                    if (parameters != null)
+                        cmd.Parameters.AddRange(parameters);
+
+                    using (var adapter = new OleDbDataAdapter(cmd))
+                    {
+                        var dt = new DataTable();
+                        adapter.Fill(dt);
+                        return dt;
+                    }
                 }
+            }
+            catch (OleDbException ex)
+            {
+                // Log the exact query that failed
+                Debug.WriteLine($"Failed query: {query}");
+                Debug.WriteLine($"Parameters: {string.Join(", ", parameters.Select(p => $"{p.ParameterName}={p.Value}"))}");
+                throw new ApplicationException("Database query failed", ex);
             }
         }
 

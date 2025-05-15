@@ -21,7 +21,7 @@ namespace EnrollmentSytem
 
         private void InitializeForm()
         {
-            
+
             IdNumberTextBox.Focus();
         }
 
@@ -58,7 +58,7 @@ namespace EnrollmentSytem
 
             try
             {
-                // Show loading state (optional)
+                // Show loading state
                 Cursor.Current = Cursors.WaitCursor;
                 NameTextBox.Text = "Searching...";
                 CourseTextBox.Text = "";
@@ -66,7 +66,7 @@ namespace EnrollmentSytem
 
                 string query = @"SELECT STFSTUDLNAME, STFSTUDFNAME, STFSTUDCOURSE, STFSTUDYEAR 
                         FROM StudentFile 
-                        WHERE STFSTUDID = @id"; // Ensure column name matches DB
+                        WHERE STFSTUDID = @id";
 
                 using (DatabaseConnection db = new DatabaseConnection())
                 {
@@ -88,7 +88,7 @@ namespace EnrollmentSytem
                     YearTextBox.Text = row["STFSTUDYEAR"]?.ToString() ?? "N/A";
 
                     ClearValidationError(IdNumberTextBox);
-                    EdpCodeTextBox.Focus(); // Move focus to EDP Code field
+                    EdpCodeTextBox.Focus();
                 }
             }
             catch (Exception ex)
@@ -99,7 +99,7 @@ namespace EnrollmentSytem
             }
             finally
             {
-                Cursor.Current = Cursors.Default; // Reset cursor
+                Cursor.Current = Cursors.Default;
             }
         }
         #endregion
@@ -107,8 +107,7 @@ namespace EnrollmentSytem
         #region Subject Operations
         private void SearchSubjectByEdpCode(string edpCode)
         {
-            string query = @"
-                SELECT 
+            string query = @"SELECT 
                     s.SSFEDPCODE,
                     s.SSFSUBJCODE, 
                     sub.SFSUBJDESC, 
@@ -138,17 +137,83 @@ namespace EnrollmentSytem
                 // Check prerequisites before adding subject
                 if (!CheckPrerequisites(subjectCode, studentId))
                 {
-                    return; // Stop if prerequisites aren't met
+                    return;
                 }
-                // Add to DataGridView (columns must match!)
+
+                // Check unit limit before adding
+                double newUnits = Convert.ToDouble(row["SFSUBJUNITS"]);
+                double currentTotal = GetCurrentTotalUnits();
+
+                if (currentTotal + newUnits > 29)
+                {
+                    MessageBox.Show($"Cannot add subject. Total units would exceed 29.\n" +
+                                  $"Current total: {currentTotal}\n" +
+                                  $"This subject: {newUnits}",
+                                  "Unit Limit Exceeded",
+                                  MessageBoxButtons.OK,
+                                  MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Create the new subject to check
+                var newSubject = new SubjectSchedule
+                {
+                    EDPCode = row["SSFEDPCODE"].ToString(),
+                    SubjectCode = row["SSFSUBJCODE"].ToString(),
+                    Days = row["SSFDAYS"].ToString(),
+                    StartTime = Convert.ToDateTime(row["SSFSTARTTIME"]),
+                    EndTime = Convert.ToDateTime(row["SSFENDTIME"])
+                };
+
+                // Check for conflicts with existing subjects
+                bool hasConflict = false;
+                DataGridViewRow conflictingRow = null;
+
+                foreach (DataGridViewRow existingRow in StudentEnrollmentEntryDataGridView.Rows)
+                {
+                    if (existingRow.IsNewRow) continue;
+
+                    var existingSubject = new SubjectSchedule
+                    {
+                        EDPCode = existingRow.Cells["EDPCodeColumn"].Value?.ToString(),
+                        SubjectCode = existingRow.Cells["SubjectCodeColumn"].Value?.ToString(),
+                        Days = existingRow.Cells["DaysColumn"].Value?.ToString(),
+                        StartTime = Convert.ToDateTime(existingRow.Cells["StartTimeColumn"].Value),
+                        EndTime = Convert.ToDateTime(existingRow.Cells["EndTimeColumn"].Value)
+                    };
+
+                    if (HasConflict(newSubject, existingSubject))
+                    {
+                        hasConflict = true;
+                        conflictingRow = existingRow;
+                        break;
+                    }
+                }
+
+                if (hasConflict)
+                {
+                    // Highlight the conflicting row
+                    conflictingRow.DefaultCellStyle.BackColor = Color.LightPink;
+
+                    MessageBox.Show($"Cannot add subject: {newSubject.SubjectCode}\n\n" +
+                                  $"Conflict with: {conflictingRow.Cells["SubjectCodeColumn"].Value}\n" +
+                                  $"Day/Time: {newSubject.Days} {newSubject.StartTime:t}-{newSubject.EndTime:t}\n\n" +
+                                  "Please remove the conflicting subject first.",
+                                  "Schedule Conflict",
+                                  MessageBoxButtons.OK,
+                                  MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // If no conflicts, add to grid
                 StudentEnrollmentEntryDataGridView.Rows.Add(
-                    row["SSFEDPCODE"],       
-                    row["SSFSUBJCODE"],      
-                    row["SSFSTARTTIME"],     
-                    row["SSFENDTIME"],      
-                    row["SSFDAYS"],         
-                    row["SSFROOM"],        
-                    row["SFSUBJUNITS"]      
+                    row["SSFEDPCODE"],
+                    row["SSFSUBJCODE"],
+                    row["SSFSTARTTIME"],
+                    row["SSFENDTIME"],
+                    row["SSFDAYS"],
+                    row["SSFROOM"],
+                    row["SFSUBJUNITS"]
                 );
                 UpdateTotalUnits();
             }
@@ -157,6 +222,7 @@ namespace EnrollmentSytem
                 MessageBox.Show($"Error fetching subject: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private bool CheckPrerequisites(string subjectCode, string studentId)
         {
@@ -209,72 +275,44 @@ namespace EnrollmentSytem
                 return false;
             }
         }
-
-        private void UpdateTotalUnits()
+        private double GetCurrentTotalUnits()
         {
-            double totalUnits = 0;
-
+            double total = 0;
             foreach (DataGridViewRow row in StudentEnrollmentEntryDataGridView.Rows)
             {
-                // Skip empty rows
-                if (row.IsNewRow || row.Cells["UnitsColumn"].Value == null)
-                    continue;
-
-                // Parse units (handle errors)
-                if (double.TryParse(row.Cells["UnitsColumn"].Value.ToString(), out double units))
+                if (!row.IsNewRow && row.Cells["UnitsColumn"].Value != null)
                 {
-                    totalUnits += units;
-                }
-            }
-
-            TotalUnitsTextBox.Text = totalUnits.ToString("0.0"); 
-        }
-
-        private bool HasScheduleConflicts()
-        {
-            List<SubjectSchedule> enrolledSubjects = new List<SubjectSchedule>();
-
-            foreach (DataGridViewRow row in StudentEnrollmentEntryDataGridView.Rows)
-            {
-                if (row.IsNewRow) continue;
-
-                var subject = new SubjectSchedule
-                {
-                    EDPCode = row.Cells["EDPCodeColumn"].Value?.ToString(),
-                    SubjectCode = row.Cells["SubjectCodeColumn"].Value?.ToString(),
-                    Days = row.Cells["DaysColumn"].Value?.ToString(),
-                    StartTime = row.Cells["StartTimeColumn"].Value is DateTime ?
-                               (DateTime)row.Cells["StartTimeColumn"].Value : DateTime.MinValue,
-                    EndTime = row.Cells["EndTimeColumn"].Value is DateTime ?
-                             (DateTime)row.Cells["EndTimeColumn"].Value : DateTime.MinValue
-                };
-
-                enrolledSubjects.Add(subject);
-            }
-
-            for (int i = 0; i < enrolledSubjects.Count; i++)
-            {
-                for (int j = i + 1; j < enrolledSubjects.Count; j++)
-                {
-                    if (HasConflict(enrolledSubjects[i], enrolledSubjects[j]))
+                    if (double.TryParse(row.Cells["UnitsColumn"].Value.ToString(), out double units))
                     {
-                        // Highlight conflicts
-                        StudentEnrollmentEntryDataGridView.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
-                        StudentEnrollmentEntryDataGridView.Rows[j].DefaultCellStyle.BackColor = Color.LightPink;
-
-                        MessageBox.Show($"Schedule conflict between:\n" +
-                                     $"{enrolledSubjects[i].SubjectCode} ({enrolledSubjects[i].Days} {enrolledSubjects[i].StartTime:t}-{enrolledSubjects[i].EndTime:t})\n" +
-                                     $"and\n" +
-                                     $"{enrolledSubjects[j].SubjectCode} ({enrolledSubjects[j].Days} {enrolledSubjects[j].StartTime:t}-{enrolledSubjects[j].EndTime:t})",
-                                     "Schedule Conflict",
-                                     MessageBoxButtons.OK,
-                                     MessageBoxIcon.Warning);
-                        return true;
+                        total += units;
                     }
                 }
             }
+            return total;
+        }
 
-            return false;
+        private void UpdateTotalUnits()
+        {
+            double totalUnits = GetCurrentTotalUnits();
+            TotalUnitsTextBox.Text = totalUnits.ToString("0.0");
+
+            // Show warning when approaching limit
+            if (totalUnits >= 25)
+            {
+                TotalUnitsTextBox.BackColor = totalUnits > 29 ? Color.LightPink : Color.LightYellow;
+
+                if (totalUnits > 29)
+                {
+                    MessageBox.Show("Warning: Total units exceed 29!",
+                                  "Unit Limit Exceeded",
+                                  MessageBoxButtons.OK,
+                                  MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                TotalUnitsTextBox.BackColor = SystemColors.Window;
+            }
         }
 
         private bool HasConflict(SubjectSchedule subj1, SubjectSchedule subj2)
@@ -299,6 +337,7 @@ namespace EnrollmentSytem
             // Check time overlap
             return (subj1.StartTime < subj2.EndTime && subj1.EndTime > subj2.StartTime);
         }
+
         #endregion
 
         #region Event Handlers
@@ -328,6 +367,91 @@ namespace EnrollmentSytem
             }
         }
 
+        private bool HasScheduleConflicts()
+        {
+            try
+            {
+                List<SubjectSchedule> allSubjects = new List<SubjectSchedule>();
+
+                // 1. Get existing enrolled subjects from database
+                string studentId = IdNumberTextBox.Text.Trim();
+                string schoolYear = YearTextBox.Text.Trim();
+
+                string query = @"SELECT s.SSFSTARTTIME, s.SSFENDTIME, s.SSFDays
+                        FROM ([EnrollmentDetailFile] AS ed
+                        INNER JOIN [EnrollmentHeaderFile] AS eh ON ed.ENRDFSTUDID = eh.ENRHFSTUDID)
+                        INNER JOIN [SubjectSchedFile] AS s ON ed.ENRDFSTUDEDPCODE = s.SSFEDPCODE
+                        WHERE ed.ENRDFSTUDID = @studentId 
+                        AND eh.ENRHFSTUDSCHLYR = @schoolYear
+                        AND ed.ENRDFSTUDSTATUS = 'AC'";
+
+                var existingSubjects = ExecuteQuery(query,
+                    new OleDbParameter("@studentId", studentId),
+                    new OleDbParameter("@schoolYear", schoolYear));
+
+                foreach (DataRow row in existingSubjects.Rows)
+                {
+                    allSubjects.Add(new SubjectSchedule
+                    {
+                        StartTime = row["SSFSTARTTIME"] is DateTime ? (DateTime)row["SSFSTARTTIME"] : DateTime.MinValue,
+                        EndTime = row["SSFENDTIME"] is DateTime ? (DateTime)row["SSFENDTIME"] : DateTime.MinValue,
+                        Days = row["SSFDAYS"].ToString()
+                    });
+                }
+
+                // 2. Add new subjects from grid
+                foreach (DataGridViewRow row in StudentEnrollmentEntryDataGridView.Rows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    allSubjects.Add(new SubjectSchedule
+                    {
+                        StartTime = Convert.ToDateTime(row.Cells["StartTimeColumn"].Value),
+                        EndTime = Convert.ToDateTime(row.Cells["EndTimeColumn"].Value),
+                        Days = row.Cells["DaysColumn"].Value?.ToString()
+                    });
+                }
+
+                // 3. Check all combinations for conflicts
+                for (int i = 0; i < allSubjects.Count; i++)
+                {
+                    for (int j = i + 1; j < allSubjects.Count; j++)
+                    {
+                        if (HasConflict(allSubjects[i], allSubjects[j]))
+                        {
+                            // Highlight conflicts in grid (if they're new subjects)
+                            foreach (DataGridViewRow row in StudentEnrollmentEntryDataGridView.Rows)
+                            {
+                                if (!row.IsNewRow &&
+                                    row.Cells["StartTimeColumn"].Value != null &&
+                                    Convert.ToDateTime(row.Cells["StartTimeColumn"].Value) == allSubjects[i].StartTime)
+                                {
+                                    row.DefaultCellStyle.BackColor = Color.LightPink;
+                                }
+                            }
+
+                            MessageBox.Show($"Schedule conflict detected between:\n" +
+                                          $"{allSubjects[i].Days} {allSubjects[i].StartTime:t}-{allSubjects[i].EndTime:t} and\n" +
+                                          $"{allSubjects[j].Days} {allSubjects[j].StartTime:t}-{allSubjects[j].EndTime:t}\n\n" +
+                                          "Please adjust your enrollment to resolve conflicts.",
+                                          "Schedule Conflict",
+                                          MessageBoxButtons.OK,
+                                          MessageBoxIcon.Warning);
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error checking schedule conflicts: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return true; // Return true to prevent enrollment if error occurs
+            }
+        }
+
         private void SaveButton_Click(object sender, EventArgs e)
         {
             if (!ValidateEnrollment()) return;
@@ -335,62 +459,99 @@ namespace EnrollmentSytem
             using (DatabaseConnection db = new DatabaseConnection())
             {
                 db.Open();
-                db.BeginTransaction();
 
                 try
                 {
                     string studentId = IdNumberTextBox.Text.Trim();
-                    string encoder = EncodedByTextBox.Text.Trim();
                     string schoolYear = YearTextBox.Text.Trim();
+                    string encoder = EncodedByTextBox.Text.Trim();
                     double totalUnits = double.Parse(TotalUnitsTextBox.Text);
-
                     DateTime enrollmentDate = DateTime.Parse(StudentDateEnrollPicker.Text);
 
-                    // Save to EnrollmentHeaderFile
-                    string headerQuery = @"INSERT INTO EnrollmentHeaderFile 
-                                        (ENRHFSTUDID, ENRHFSTUDDATEENROLL, ENRHFSTUDSCHLYR, 
-                                         ENRHFSTUDENCODER, ENRHFSTUDTOTALUNITS, ENRHFSTUDSTATUS)
-                                        VALUES (@studentId, @date, @schoolYear, @encoder, @totalUnits, @status)";
+                    db.BeginTransaction();
 
-                    OleDbParameter dateParam = new OleDbParameter("@date", OleDbType.Date);
-                    dateParam.Value = enrollmentDate;
+                    // Check if enrollment header exists
+                    string checkExistingQuery = @"SELECT COUNT(*) FROM EnrollmentHeaderFile 
+                                  WHERE ENRHFSTUDID = @studentId 
+                                  AND ENRHFSTUDSCHLYR = @schoolYear";
 
-                    OleDbParameter totalUnitsParam = new OleDbParameter("@totalUnits", OleDbType.Double);
-                    totalUnitsParam.Value = totalUnits;
-
-                    db.ExecuteNonQuery(headerQuery,
+                    int existingCount = Convert.ToInt32(db.ExecuteScalar(checkExistingQuery,
                         new OleDbParameter("@studentId", studentId),
-                        new OleDbParameter("@date", enrollmentDate),
-                        new OleDbParameter("@schoolYear", schoolYear),
-                        new OleDbParameter("@encoder", encoder),
-                        new OleDbParameter("@totalUnits", totalUnits),
-                        new OleDbParameter("@status", "EN")
-                    );
+                        new OleDbParameter("@schoolYear", schoolYear)));
 
-                    // Save each subject to EnrollmentDetailFile
+                    if (existingCount == 0)
+                    {
+                        // Create new enrollment header if doesn't exist
+                        string headerQuery = @"INSERT INTO EnrollmentHeaderFile 
+                            (ENRHFSTUDID, ENRHFSTUDDATEENROLL, ENRHFSTUDSCHLYR, 
+                             ENRHFSTUDENCODER, ENRHFSTUDTOTALUNITS, ENRHFSTUDSTATUS)
+                            VALUES (@studentId, @date, @schoolYear, @encoder, @totalUnits, @status)";
+
+                        db.ExecuteNonQuery(headerQuery,
+                            new OleDbParameter("@studentId", studentId),
+                            new OleDbParameter("@date", enrollmentDate),
+                            new OleDbParameter("@schoolYear", schoolYear),
+                            new OleDbParameter("@encoder", encoder),
+                            new OleDbParameter("@totalUnits", totalUnits),
+                            new OleDbParameter("@status", "EN")
+                        );
+                    }
+                    else
+                    {
+                        // Update existing enrollment header with new total units
+                        string updateHeaderQuery = @"UPDATE EnrollmentHeaderFile 
+                                   SET ENRHFSTUDTOTALUNITS = ENRHFSTUDTOTALUNITS + @addedUnits
+                                   WHERE ENRHFSTUDID = @studentId 
+                                   AND ENRHFSTUDSCHLYR = @schoolYear";
+
+                        db.ExecuteNonQuery(updateHeaderQuery,
+                            new OleDbParameter("@addedUnits", totalUnits),
+                            new OleDbParameter("@studentId", studentId),
+                            new OleDbParameter("@schoolYear", schoolYear)
+                        );
+                    }
+
+                    // Save each subject to EnrollmentDetailFile (only if not already enrolled)
                     foreach (DataGridViewRow row in StudentEnrollmentEntryDataGridView.Rows)
                     {
                         if (row.IsNewRow) continue;
 
-                        string detailQuery = @"INSERT INTO EnrollmentDetailFile 
-                                             (ENRDFSTUDID, ENRDFSTUDSUBJCDE, ENRDFSTUDEDPCODE, ENRDFSTUDSTATUS)
-                                             VALUES (@studentId, @subjectCode, @edpCode, @status)";
+                        string subjectCode = row.Cells["SubjectCodeColumn"].Value?.ToString() ?? "";
+                        string edpCode = row.Cells["EDPCodeColumn"].Value?.ToString() ?? "";
 
-                        db.ExecuteNonQuery(detailQuery,
+                        // Check if already enrolled in this subject
+                        string checkSubjectQuery = @"SELECT COUNT(*) FROM EnrollmentDetailFile 
+                                     WHERE ENRDFSTUDID = @studentId 
+                                     AND ENRDFSTUDSUBJCDE = @subjectCode
+                                     AND ENRDFSTUDEDPCODE = @edpCode";
+
+                        int subjectCount = Convert.ToInt32(db.ExecuteScalar(checkSubjectQuery,
                             new OleDbParameter("@studentId", studentId),
-                            new OleDbParameter("@subjectCode", row.Cells["SubjectCodeColumn"].Value?.ToString() ?? ""),
-                            new OleDbParameter("@edpCode", row.Cells["EDPCodeColumn"].Value?.ToString() ?? ""),
-                            new OleDbParameter("@status", "AC")
-                        );
+                            new OleDbParameter("@subjectCode", subjectCode),
+                            new OleDbParameter("@edpCode", edpCode)));
 
-                        // Update class size in SubjectSchedFile
-                        string updateQuery = @"UPDATE SubjectSchedFile 
-                                             SET SSFCLASSSIZE = SSFCLASSSIZE + 1 
-                                             WHERE SSFEDPCODE = @edpCode";
+                        if (subjectCount == 0)
+                        {
+                            string detailQuery = @"INSERT INTO EnrollmentDetailFile 
+                                 (ENRDFSTUDID, ENRDFSTUDSUBJCDE, ENRDFSTUDEDPCODE, ENRDFSTUDSTATUS)
+                                 VALUES (@studentId, @subjectCode, @edpCode, @status)";
 
-                        db.ExecuteNonQuery(updateQuery,
-                            new OleDbParameter("@edpCode", row.Cells["EDPCodeColumn"].Value?.ToString() ?? "")
-                        );
+                            db.ExecuteNonQuery(detailQuery,
+                                new OleDbParameter("@studentId", studentId),
+                                new OleDbParameter("@subjectCode", subjectCode),
+                                new OleDbParameter("@edpCode", edpCode),
+                                new OleDbParameter("@status", "AC")
+                            );
+
+                            // Update class size
+                            string updateQuery = @"UPDATE SubjectSchedFile 
+                                 SET SSFCLASSSIZE = SSFCLASSSIZE + 1 
+                                 WHERE SSFEDPCODE = @edpCode";
+
+                            db.ExecuteNonQuery(updateQuery,
+                                new OleDbParameter("@edpCode", edpCode)
+                            );
+                        }
                     }
 
                     db.CommitTransaction();
@@ -401,8 +562,8 @@ namespace EnrollmentSytem
                 catch (Exception ex)
                 {
                     db.RollbackTransaction();
-                    MessageBox.Show($"Error saving enrollment: {ex.Message}\n\nStack Trace:\n{ex.StackTrace}",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error saving enrollment: {ex.Message}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -457,10 +618,86 @@ namespace EnrollmentSytem
             // Check for schedule conflicts
             if (HasScheduleConflicts())
             {
+                MessageBox.Show("Cannot save enrollment due to schedule conflicts.",
+                      "Schedule Conflict",
+                      MessageBoxButtons.OK,
+                      MessageBoxIcon.Error);
+                return false;
+            }
+
+            // Check for duplicate subjects in the grid
+            if (HasDuplicateSubjects())
+            {
+                MessageBox.Show("Cannot save enrollment with duplicate subjects.", "Duplicate Subjects",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            // Check unit limit
+            double totalUnits = GetCurrentTotalUnits();
+            if (totalUnits > 29)
+            {
+                MessageBox.Show($"Total units cannot exceed 29.\nCurrent total: {totalUnits}",
+                              "Unit Limit Exceeded",
+                              MessageBoxButtons.OK,
+                              MessageBoxIcon.Warning);
                 return false;
             }
 
             return true;
+        }
+
+        private bool HasDuplicateSubjects()
+        {
+            // Create a list to store subject codes
+            HashSet<string> subjectCodes = new HashSet<string>();
+            HashSet<string> edpCodes = new HashSet<string>();
+
+            foreach (DataGridViewRow row in StudentEnrollmentEntryDataGridView.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                string subjectCode = row.Cells["SubjectCodeColumn"].Value?.ToString();
+                string edpCode = row.Cells["EDPCodeColumn"].Value?.ToString();
+
+                // Check for duplicate subject codes
+                if (!string.IsNullOrEmpty(subjectCode))
+                {
+                    if (subjectCodes.Contains(subjectCode))
+                    {
+                        // Highlight the duplicate row
+                        row.DefaultCellStyle.BackColor = Color.LightPink;
+
+                        MessageBox.Show($"Duplicate subject found: {subjectCode}",
+                            "Duplicate Subject",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+
+                        return true;
+                    }
+                    subjectCodes.Add(subjectCode);
+                }
+
+                // Check for duplicate EDP codes
+                if (!string.IsNullOrEmpty(edpCode))
+                {
+                    if (edpCodes.Contains(edpCode))
+                    {
+                        // Highlight the duplicate row
+                        row.DefaultCellStyle.BackColor = Color.LightPink;
+
+                        MessageBox.Show($"Duplicate EDP code found: {edpCode}",
+                            "Duplicate EDP Code",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+
+                        return true;
+                    }
+                    edpCodes.Add(edpCode);
+                }
+            }
+
+            return false;
         }
 
         private void ShowValidationError(string message, Control control)
