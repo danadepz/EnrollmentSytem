@@ -271,7 +271,7 @@ namespace EnrollmentSytem
             }
         }
 
-        private void ClearButton_Click_1(object sender, EventArgs e)
+        private void ClearButton_Click(object sender, EventArgs e)
         {
             currentStudentId = string.Empty;
             enrolledSubjects.Clear();
