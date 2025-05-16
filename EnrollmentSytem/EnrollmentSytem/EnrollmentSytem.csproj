@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdminMenu.Designer.cs">
+      <DependentUpon>AdminMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="DatabaseConnection.cs" />
     <Compile Include="StudentGrades.cs">
       <SubType>Form</SubType>
@@ -64,6 +70,12 @@
     </Compile>
     <Compile Include="StudentEntryForm.Designer.cs">
       <DependentUpon>StudentEntryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SubjAssignment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubjAssignment.Designer.cs">
+      <DependentUpon>SubjAssignment.cs</DependentUpon>
     </Compile>
     <Compile Include="SubjectEntryForm.cs">
       <SubType>Form</SubType>
@@ -85,6 +97,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AdminMenu.resx">
+      <DependentUpon>AdminMenu.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Start.resx">
       <DependentUpon>Start.cs</DependentUpon>
     </EmbeddedResource>
@@ -93,6 +109,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="StudentGrades.resx">
       <DependentUpon>StudentGrades.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubjAssignment.resx">
+      <DependentUpon>SubjAssignment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SubjectEntryForm.resx">
       <DependentUpon>SubjectEntryForm.cs</DependentUpon>

@@ -35,14 +35,6 @@ namespace EnrollmentSytem
             }
         }
 
-        private int ExecuteNonQuery(string query, params OleDbParameter[] parameters)
-        {
-            using (DatabaseConnection db = new DatabaseConnection())
-            {
-                db.Open();
-                return db.ExecuteNonQuery(query, parameters);
-            }
-        }
         #endregion
 
         #region Student Operations
