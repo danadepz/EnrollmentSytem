@@ -60,7 +60,7 @@ namespace EnrollmentSytem
                         switch (role)
                         {
                             case "Admin":
-                                AssSubjLinkLabel adminForm = new AssSubjLinkLabel();
+                                AdminMenu adminForm = new AdminMenu();
                                 adminForm.Show();
                                 this.Hide();
                                 break;

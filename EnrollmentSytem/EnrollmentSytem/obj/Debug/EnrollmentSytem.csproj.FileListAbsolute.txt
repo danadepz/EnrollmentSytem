@@ -28,6 +28,6 @@ C:\Users\kimpc\source\repos\danadepz\final_EnrollmentSystem\EnrollmentSytem\Enro
 C:\Users\kimpc\source\repos\danadepz\final_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\bin\Debug\EnrollmentSytem.exe.config
 C:\Users\kimpc\source\repos\danadepz\final_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\bin\Debug\EnrollmentSytem.exe
 C:\Users\kimpc\source\repos\danadepz\final_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\bin\Debug\EnrollmentSytem.pdb
-C:\Users\kimpc\source\repos\danadepz\final_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.AssSubjLinkLabel.resources
 C:\Users\kimpc\source\repos\danadepz\final_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.exe
 C:\Users\kimpc\source\repos\danadepz\final_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.pdb
+C:\Users\kimpc\source\repos\danadepz\final_EnrollmentSystem\EnrollmentSytem\EnrollmentSytem\obj\Debug\EnrollmentSytem.AdminMenu.resources
